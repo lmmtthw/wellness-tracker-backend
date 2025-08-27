@@ -29,7 +29,7 @@ wellness-tracker-backend/
 ├── package.json
 └── README.md
 ```
-Server Setup (server.js)
+## Server Setup (server.js)
 ```
 // server.js
 const express = require('express');
@@ -75,7 +75,7 @@ console.log(`Server running on port ${PORT}`);
 
 ```
 
-MongoDB Model (models/ActivityLog.js)
+## MongoDB Model (models/ActivityLog.js)
 
 ```
 // models/ActivityLog.js
@@ -92,9 +92,7 @@ source: { type: String, default: 'manual' }, // 'manual' or 'device'
 module.exports = mongoose.model('ActivityLog', activityLogSchema);
 
 ```
-
-Redis Client Setup (redisClient.js)
-
+## Redis Client Setup (redisClient.js)
 
 ```
 // redisClient.js
@@ -114,10 +112,7 @@ console.error('Redis client error:', err);
 });
 module.exports = client;
 ```
-
-
-Controller Implementation (Controllers/activityController.js)
-
+## Controller Implementation (Controllers/activityController.js)
 
 ```
 // controllers/activityController.js
@@ -183,8 +178,8 @@ res.status(500).json({ error: 'Error retrieving activity logs' });
 };
 module.exports = { logActivity, getActivityLogs };
 ```
+## Routes (routes/activity.js)
 
-Routes (routes/activity.js)
 ```
 // routes/activity.js
 const express = require('express');
@@ -197,6 +192,92 @@ router.get('/:userId', getActivityLogs);
 module.exports = router;
 ```
 
+## Documentation
+
+## A. Setup Instructions
+**1. Install Dependencies:**
+
+Ensure you have Node.js and npm installed. Then, install dependencies:
+
+```
+npm install
+
+```
+
+**2. Create .env file:**
+Add your MongoDB connection URI and Redis configuration:
+
+```
+MONGO_URI=mongodb://localhost:27017/wellnessTracker
+REDIS_HOST=localhost
+REDIS_PORT=6379
+```
+
+## B. Run the Service:
+**1. Start the backend service:**
+
+```
+node server.js
+```
+
+## C. API Usage
+**1. Log Wellness Activity: Endpoint: POST /activity**
+
+```
+Request Body:
+{
+"user_id": "1234"
+,
+"date": "2023-08-01"
+,
+"hydration_liters": 2.0,
+"sleep_hours": 7.5,
+"exercise_minutes": 30,
+"meditation_minutes": 10,
+"source": "manual"
+}
+
+```
+Response: A JSON object of the newly logged activity.
+
+**2. Get Activity Logs for a User:**
+```
+Endpoint: GET
+
+/activity/:userId?start=YYYY-MM-DD&end=YYYY-MM-DD
+
+Example: GET /activity/1234?start=2023-08-01&end=2023-08-07
+
+```
+Response: A JSON array of the user’s activity logs within the date range.
+
+**C. Assumptions Made**
+
+User data is identified by user_id.
+The date format for activity logs is YYYY-MM-DD.
+Redis stores cached data indefinitely (no TTL).
+The system doesn't have authentication or authorization mechanisms (this can be added
+if needed).
+
+
+## Explanation of Tracking Logic
+
+**1. Logging Activities:**
+
+- When a user logs wellness data, the backend stores the data in MongoDB.
+- If there is a valid source, it is stored as either 'manual' or 'device'.
+
+
+## Caching
+
+To improve performance and reduce database load, activity logs are cached in **Redis** for 1 hour.
+
+- **Cache Miss** 
+  When a `GET /activity/:userId` request is made, the server first queries **Redis** for cached data.  
+  If no cache exists, the server queries **MongoDB**, stores the result in Redis, and returns the data.
+
+- **Cache Hit** 
+  If the requested data is already in Redis, the server skips the database query and returns the cached data directly, resulting in much faster responses.
 
 
 
