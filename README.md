@@ -4,7 +4,6 @@
 ![Express](https://img.shields.io/badge/Express.js-Backend-lightgrey?logo=express)
 ![MongoDB](https://img.shields.io/badge/MongoDB-Database-green?logo=mongodb)
 ![Redis](https://img.shields.io/badge/Redis-Cache-red?logo=redis)
-![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
 
 A Node.js + Express backend service for logging and retrieving wellness activities (hydration, sleep, exercise, meditation).  
 Built with **MongoDB** for persistence and **Redis** for caching.
