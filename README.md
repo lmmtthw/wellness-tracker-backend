@@ -250,7 +250,7 @@ Example: GET /activity/1234?start=2023-08-01&end=2023-08-07
 ```
 Response: A JSON array of the user’s activity logs within the date range.
 
-## C. Assumptions Made
+## D. Assumptions Made
 
 User data is identified by user_id.
 The date format for activity logs is YYYY-MM-DD.
